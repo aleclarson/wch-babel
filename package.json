@@ -6,6 +6,10 @@
     "build": "coffee-build src -o js",
     "prepublishOnly": "prepv -i || true"
   },
+  "dependencies": {
+    "fsx": "aleclarson/fsx#1.7.0",
+    "resolve": "aleclarson/resolve#1.0.0"
+  },
   "devDependencies": {
     "wch-coffee": "*"
   }
