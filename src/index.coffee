@@ -52,11 +52,11 @@ module.exports = (log) ->
     .each (dest, file) ->
       wch.emit 'file:delete', {file: file.path, dest}
 
-  streamConfig =
-    crawl: true
+  watchOptions =
+    only: ['*.js']
+    skip: ['**/__*__/**']
     fields: ['name', 'exists', 'new', 'mtime_ms']
-    include: ['*.js']
-    exclude: ['**/__*__/**']
+    crawl: true
 
   attach: (pack) ->
     pack.compile = loadBabel pack
@@ -64,7 +64,7 @@ module.exports = (log) ->
     return unless pack.compile
 
     dest = path.dirname path.resolve pack.path, pack.main or 'js/index'
-    changes = pack.stream 'src', streamConfig
+    changes = pack.stream 'src', watchOptions
     changes.on 'data', (file) ->
       file.dest = path.join dest, file.name
       action = if file.exists then build else clear
