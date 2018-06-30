@@ -5,14 +5,15 @@ fs = require 'fsx'
 
 # TODO: Unload babel modules when this plugin is stopped.
 module.exports = (log) ->
+  debug = log.debug 'wch-babel'
   babelCache = {}
 
   loadBabel = (pack) ->
     unless babelPath = resolvePath 'babel-core', {parent: pack.path}
-      log.yellow 'warn:', "Cannot resolve 'babel-core' from '#{pack.path}'"
+      log.warn "Cannot resolve 'babel-core' from '#{pack.path}'"
       return null
     unless babel = babelCache[babelPath]
-      log.pale_yellow 'Loading:', shortPath babelPath
+      log log.lyellow('Loading:'), shortPath babelPath
       babel = require(babelPath).transformFileSync
       babelCache[babelPath] = babel
     return babel
@@ -24,11 +25,8 @@ module.exports = (log) ->
     try mtime = fs.stat(file.dest).mtime.getTime()
     return if mtime and mtime > file.mtime_ms
 
-    if log.verbose
-      log.pale_yellow 'Transpiling:', shortPath file.path
-
-    # TODO: Source maps
-    try
+    debug 'Transpiling:', shortPath file.path
+    try # TODO: source maps
       {code} = @compile file.path,
         highlightCode: false
       return [code, file]
@@ -40,8 +38,7 @@ module.exports = (log) ->
         message: err.message.slice file.path.length + 2
         location: [loc, loc]
 
-      if log.verbose
-        log.red 'Failed to compile:', shortPath file.path
+      debug log.red('Failed to compile:'), shortPath file.path
       return
 
   build = wch.pipeline()
@@ -72,5 +69,5 @@ module.exports = (log) ->
       file.dest = path.join dest, file.name
       action = if file.exists then build else clear
       action.call(pack, file).catch (err) ->
-        log.red 'Error while processing:', file.path
+        log log.red('Error while processing:'), file.path
         console.error err.stack
