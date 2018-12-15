@@ -7,7 +7,7 @@
     "prepublishOnly": "prepv -i || true"
   },
   "dependencies": {
-    "fsx": "aleclarson/fsx#1.7.0",
+    "fsx": "aleclarson/fsx#1.9.0",
     "resolve": "aleclarson/resolve#1.0.0",
     "wch": "^0.8.0"
   },
