@@ -9,7 +9,7 @@
   "dependencies": {
     "fsx": "aleclarson/fsx#1.7.0",
     "resolve": "aleclarson/resolve#1.0.0",
-    "wch": "^0.8.0"
+    "wch": "^0.10.0"
   },
   "devDependencies": {
     "coffeescript": "^2.3.0",
